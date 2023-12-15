@@ -1,0 +1,22 @@
+.movieCard {
+  background-color: aliceblue;
+  color: #242424;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  img {
+    border-radius: 0.33rem;
+  }
+
+  p {
+    font-size: 0.875rem;
+  }
+
+  .date {
+    margin: auto 0 0 auto;
+    color: blue;
+  }
+}

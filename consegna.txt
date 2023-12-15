@@ -10,8 +10,10 @@ Consigli:
 - Gestite lo state [movies, setMovies] all'interno del vostro componente App, non in un 
 sottocomponente. Al MountEnd, eseguite una fetch all'endpoint corretto (aprire il link 
 reference qui sopra e andare a studiarvi la documentazione).
+
 - Create un componente MovieCard, che riceve come props le proprietà che volete 
 rappresentare per ogni film (ad esempio title, description, cover, genres, ecc.).  
+
 - Creare un componente SearchBar con campo di ricerca (input text) e bottone "Cerca". 
 Il componente riceve come prop una callback function onSearch, che viene eseguita al click 
 del bottone "Cerca" e a cui le viene passato come parametro il value corrente dell'input.
