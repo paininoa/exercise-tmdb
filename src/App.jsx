@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
-import "./App.css";
+import "./App.scss";
 import MovieCard from "./MovieCard/MovieCard";
+import SearchBar from "./SearchBar/SearchBar";
 const apiKey = import.meta.env.VITE_API_KEY;
 
 function App() {
-  const [movies, setMovies] = useState([{ title: "lotr" }]);
-  console.log(movies);
+  const [movies, setMovies] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredMovies, setFilteredMovies] = useState([]);
 
-  // return (
-  //   <div>
-  //     {movies.map((m) => (
-  //       <div>{m.title}</div>
-  //     ))}
-  //   </div>
-  // );
+  console.log(filteredMovies);
+
+  const onSearch = () => {
+    setFilteredMovies(movies);
+    const newList = movies.filter(({ title }) =>
+      title.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredMovies(newList);
+  };
 
   useEffect(() => {
     const query = new URLSearchParams({
@@ -22,7 +26,9 @@ function App() {
     });
     fetch(`https://api.themoviedb.org/3/movie/top_rated?${query.toString()}`)
       .then((response) => response.json())
-      .then((obj) => setMovies(obj.results))
+      .then((obj) => {
+        return setMovies(obj.results), setFilteredMovies(obj.results);
+      })
       .catch((error) => console.error(error));
   }, []);
 
@@ -32,8 +38,16 @@ function App() {
         exercise-tmdb <br /> 15/12
       </h1>
 
+      <div className="searchWrapper">
+        <SearchBar
+          searchValue={searchValue}
+          handleChange={(inputValue) => setSearchValue(inputValue)}
+          handleClick={onSearch}
+        />
+      </div>
+
       <div className="cardsWrapper">
-        {movies.map((m) => (
+        {filteredMovies.map((m) => (
           <MovieCard
             key={m.id}
             title={m.title}
