@@ -9,12 +9,16 @@ function App() {
   const [searchValue, setSearchValue] = useState("");
   const [filteredMovies, setFilteredMovies] = useState([]);
 
+  console.log(movies);
   console.log(filteredMovies);
+  console.log(searchValue);
+
+  const handleChange = (inputValue) => setSearchValue(inputValue);
 
   const onSearch = () => {
     setFilteredMovies(movies);
-    const newList = movies.filter(({ title }) =>
-      title.toLowerCase().includes(search.toLowerCase())
+    const newList = movies.filter((title) =>
+      title.toLowerCase().includes(searchValue.toLowerCase())
     );
     setFilteredMovies(newList);
   };
@@ -41,7 +45,7 @@ function App() {
       <div className="searchWrapper">
         <SearchBar
           searchValue={searchValue}
-          handleChange={(inputValue) => setSearchValue(inputValue)}
+          handleChange={handleChange}
           handleClick={onSearch}
         />
       </div>
