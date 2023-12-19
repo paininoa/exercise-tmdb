@@ -1,20 +1,25 @@
 import { useState } from "react";
 import "./SearchBar.scss";
 
-export default ({ searchValue, handleChange, onSearch }) => {
+export default ({ onSearch }) => {
+  const [inputValue, setInputValue] = useState("");
   return (
     <>
-      <input
-        type="text"
-        value={searchValue}
-        onChange={(e) => handleChange(e.target.value)}
-      />
-      <button
-        onClick={onSearch}
-        disabled={searchValue.trim() === "" ? true : false}
-      >
-        Search
-      </button>
+      <div className="searchWrapper">
+        <input
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+        <button
+          onClick={() => {
+            onSearch(inputValue);
+          }}
+          disabled={inputValue.trim() === "" ? true : false}
+        >
+          Search
+        </button>
+      </div>
     </>
   );
 };

@@ -6,22 +6,7 @@ const apiKey = import.meta.env.VITE_API_KEY;
 
 function App() {
   const [movies, setMovies] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
-  const [filteredMovies, setFilteredMovies] = useState([]);
-
-  console.log(movies);
-  console.log(filteredMovies);
-  console.log(searchValue);
-
-  const handleChange = (inputValue) => setSearchValue(inputValue);
-
-  const onSearch = () => {
-    setFilteredMovies(movies);
-    const newList = movies.filter((title) =>
-      title.toLowerCase().includes(searchValue.toLowerCase())
-    );
-    setFilteredMovies(newList);
-  };
+  const [errorMessage, setErrorMessage] = useState();
 
   useEffect(() => {
     const query = new URLSearchParams({
@@ -30,11 +15,30 @@ function App() {
     });
     fetch(`https://api.themoviedb.org/3/movie/top_rated?${query.toString()}`)
       .then((response) => response.json())
-      .then((obj) => {
-        return setMovies(obj.results), setFilteredMovies(obj.results);
-      })
-      .catch((error) => console.error(error));
+      .then((obj) => setMovies(obj.results))
+      .catch((error) => {
+        console.error(error);
+        setErrorMessage("There was a problem. Try again.");
+      });
   }, []);
+
+  const search = async (searchValue) => {
+    const searchParams = new URLSearchParams({
+      api_key: apiKey,
+      language: "en-EN",
+      query: searchValue,
+    });
+    const response = await fetch(
+      `https://api.themoviedb.org/3/search/movie?${searchParams.toString()}`
+    );
+    if (!response.ok) {
+      console.log(response);
+      setErrorMessage("There was a problem. Try again.");
+      return;
+    }
+    const { results } = await response.json();
+    setMovies(results);
+  };
 
   return (
     <>
@@ -42,25 +46,19 @@ function App() {
         exercise-tmdb <br /> 15/12
       </h1>
 
-      <div className="searchWrapper">
-        <SearchBar
-          searchValue={searchValue}
-          handleChange={handleChange}
-          handleClick={onSearch}
-        />
-      </div>
-
-      <div className="cardsWrapper">
-        {filteredMovies.map((m) => (
-          <MovieCard
-            key={m.id}
-            title={m.title}
-            description={m.overview}
-            cover={`https://image.tmdb.org/t/p/w500${m.poster_path}`}
-            date={m.release_date}
-          />
-        ))}
-      </div>
+      {errorMessage && <div className="errorMessage">{errorMessage}</div>}
+      {!errorMessage && (
+        <>
+          <SearchBar onSearch={search} />
+          {movies.length !== 0 && (
+            <div className="movieList">
+              {movies.map((movie) => (
+                <MovieCard key={`movie-${movie.id}`} data={movie} />
+              ))}
+            </div>
+          )}
+        </>
+      )}
     </>
   );
 }

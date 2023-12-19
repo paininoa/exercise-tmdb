@@ -1,16 +1,17 @@
 import "./MovieCard.scss";
 
-export default ({ title, description, cover, date }) => {
+export default ({ data }) => {
+  const { poster_path, title, overview, release_date } = data;
   return (
     <>
       <div className="movieCard">
         <figure>
-          <img src={`${cover}`} alt={`cover ${title}`} />
+          <img src={`https://image.tmdb.org/t/p/w500${poster_path}`} />
         </figure>
         <h4>{title}</h4>
-        <p>{description}</p>
+        <p>{overview}</p>
         <p className="date">
-          <strong>{date}</strong>
+          <strong>{release_date}</strong>
         </p>
       </div>
     </>
